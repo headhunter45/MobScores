@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with MobScores.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.majinnaibu.bukkit.plugins.mobscores.listeners;
+package com.majinnaibu.bukkitplugins.mobscores.listeners;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
-import com.majinnaibu.bukkit.plugins.mobscores.MobScoresPlugin;
+import com.majinnaibu.bukkitplugins.mobscores.MobScoresPlugin;
 
 public class MobDeathListener extends EntityListener {
 	private MobScoresPlugin _plugin = null; 

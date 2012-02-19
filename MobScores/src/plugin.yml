@@ -1,4 +1,0 @@
-name: MobScores
-main: com.majinnaibu.bukkit.plugins.mobscores.MobScoresPlugin
-depend: [ScoreKeeper]
-version: 0.1

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with MobScores.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.majinnaibu.bukkit.plugins.mobscores;
+package com.majinnaibu.bukkitplugins.mobscores;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,9 +33,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-import com.majinnaibu.bukkit.plugins.mobscores.listeners.MobDeathListener;
-import com.majinnaibu.bukkit.plugins.mobscores.listeners.PlayerConnectListener;
-import com.majinnaibu.bukkit.plugins.scorekeeper.ScoreKeeperPlugin;
+import com.majinnaibu.bukkitplugins.mobscores.listeners.MobDeathListener;
+import com.majinnaibu.bukkitplugins.mobscores.listeners.PlayerConnectListener;
+import com.majinnaibu.bukkitplugins.scorekeeper.ScoreKeeperPlugin;
 
 public class MobScoresPlugin extends JavaPlugin {
 	private final MobDeathListener _mobDeathListener = new MobDeathListener(this);
