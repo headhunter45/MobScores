@@ -9,7 +9,7 @@
 - [x] Ensure plugin.yml is present in src/main/resources and update for PaperMC compatibility (api-version, commands, required fields).
 - [ ] Refactor all logger usage to use getLogger() from JavaPlugin.
 - [ ] Refactor all event listeners to use the modern event system (Listener interface, @EventHandler, registerEvents).
-- [ ] Replace use of org.bukkit.util.config.Configuration with the modern configuration API (getConfig(), saveConfig(), etc.).
+- [x] Replace use of org.bukkit.util.config.Configuration with the modern configuration API (getConfig(), saveConfig(), etc.).
 - [ ] Update score table to use Bukkit entity types or enums instead of CraftBukkit class names.
 - [ ] If storing player scores, refactor to use UUID as the key instead of Player or String.
 - [ ] Build the plugin with Gradle (./gradlew build) and test on a modern Paper server using the provided bash scripts. _(Depends on: all refactors and plugin.yml update)_

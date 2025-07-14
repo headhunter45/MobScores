@@ -31,7 +31,6 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 
 import com.majinnaibu.minecraft.plugins.mobscores.listeners.MobDeathListener;
 import com.majinnaibu.minecraft.plugins.mobscores.listeners.PlayerConnectListener;
@@ -40,10 +39,9 @@ import com.majinnaibu.minecraft.plugins.scorekeeper.ScoreKeeperPlugin;
 public class MobScoresPlugin extends JavaPlugin {
 	private final MobDeathListener _mobDeathListener = new MobDeathListener(this);
 	private final PlayerConnectListener _playerConnectListener = new PlayerConnectListener(this);
-	private HashMap<Entity, Player> _claimedMobs = new HashMap<Entity, Player>();
-	private HashMap<String, Integer> _scoreTable = new HashMap<String, Integer>();
+	private Map<Entity, Player> _claimedMobs = new HashMap<Entity, Player>();
+	private Map<String, Integer> _scoreTable = new HashMap<String, Integer>();
 	private ScoreKeeperPlugin _scoreKeeper = null;
-	private Configuration _configuration = null;
 
 	private final String _logStart = "[" + ChatColor.AQUA + "MobScores" + ChatColor.WHITE + "] ";
 	
@@ -51,30 +49,30 @@ public class MobScoresPlugin extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		_configuration.setProperty("ScoreTable", _scoreTable);
-		_configuration.save();
-		
+		getConfig().set("ScoreTable", _scoreTable);
+		saveConfig();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable() {
-		_configuration = getConfiguration();
-		try{
-			_scoreTable = (HashMap<String, Integer>)_configuration.getProperty("ScoreTable");
-		}catch (Exception ex){
+		// Create the default config if it doesn't exist.
+		saveDefaultConfig();
+
+		// Load our score table from config or set defaults.
+		if (getConfig().contains("ScoreTable")) {
+			Object rawValue = getConfig().get("ScoreTable");
+			if (rawValue instanceof Map) {
+				_scoreTable = new HashMap<>((Map<String, Integer>) rawValue);
+			} else {
+				_scoreTable = getDefaultScoreTable();
+			}
+		} else {
 			_scoreTable = getDefaultScoreTable();
+			getConfig().set("ScoreTable", _scoreTable);
+			saveConfig();
 		}
-		
-		if(_scoreTable == null){
-			_scoreTable = getDefaultScoreTable();
-		}
-		
-		_configuration.setProperty("ScoreTable", _scoreTable);
-		
-		
-		_configuration.save();
-		
+
 		PluginManager pm = getServer().getPluginManager();
 		_scoreKeeper = (ScoreKeeperPlugin)pm.getPlugin("ScoreKeeper");
 		
