@@ -16,8 +16,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT'
     compileOnly 'com.majinnaibu.minecraft.plugins:ScoreKeeper:0.2.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT'
+    compileOnly 'net.kyori:adventure-api:4.14.0' 
+
     testImplementation libs.junit.junit
 }
 

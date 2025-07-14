@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,10 +40,11 @@ public class MobScoresPlugin extends JavaPlugin {
 	private Map<String, Integer> _scoreTable = new HashMap<String, Integer>();
 	private ScoreKeeperPlugin _scoreKeeper = null;
 
-	private final String _logStart = "[" + ChatColor.AQUA + "MobScores" + ChatColor.WHITE + "] ";
-	
-	public final Logger log = Logger.getLogger("Minecraft");
-	
+	private final String _logPrefix = "[MobScores] ";
+	private final Component _messagePrefix = Component.text("[")
+		.append(Component.text("MobScores").color(NamedTextColor.AQUA))
+		.append(Component.text("] ").color(NamedTextColor.WHITE));
+
 	@Override
 	public void onDisable() {
 		getConfig().set("ScoreTable", _scoreTable);
@@ -80,8 +81,7 @@ public class MobScoresPlugin extends JavaPlugin {
 		pm.registerEvents(new MobDeathListener(this), this);
 		pm.registerEvents(new PlayerConnectListener(this), this);
 
-		PluginDescriptionFile pdFile = this.getDescription();
-		log.info(pdFile.getName() + " version " + pdFile.getVersion() + " is enabled!");
+		logInfo(getPluginMeta().getName() + " version " + getPluginMeta().getVersion() + " is enabled!");
 	}
 
 	private HashMap<String, Integer> getDefaultScoreTable() {
@@ -115,7 +115,7 @@ public class MobScoresPlugin extends JavaPlugin {
 	}
 
 	public void awardScore(Entity entity) {
-				
+
 		if(_claimedMobs.containsKey(entity)){
 			Class<?> scoreClass = entity.getClass();
 			String className = scoreClass.getName();
@@ -125,11 +125,11 @@ public class MobScoresPlugin extends JavaPlugin {
 				
 				_scoreKeeper.addScore(player, score);
 			}else{
-				log.warning("[MobScores] Unable to award score for {" + className + "}");
+				logWarning("Unable to award score for {" + className + "}");
 				Set<String> keys = _scoreTable.keySet();
 				String str = null;
 				for(Iterator<String> i = keys.iterator(); i.hasNext(); str = i.next()){
-					log.info("{" + str + "}");
+					logInfo("{" + str + "}");
 				}
 			}
 		}	
@@ -142,15 +142,23 @@ public class MobScoresPlugin extends JavaPlugin {
 			if(pair.getValue() != 0){
 				String key = pair.getKey();
 				if(key.startsWith("org.bukkit.craftbukkit.entity.Craft")){
-					player.sendMessage(_logStart + key.substring(35) + " = " + pair.getValue().toString());
+					sendPlayerMessage(player, key.substring(35) + " = " + pair.getValue().toString());
 				}else{
-					player.sendMessage(_logStart +  key + " = " + pair.getValue().toString());
+					sendPlayerMessage(player, key + " = " + pair.getValue().toString());
 				}
 			}
 		}
 	}
 
-	public void logInfo(String string) {
-		log.info(_logStart + string);
+	public void sendPlayerMessage(Player player, String message) {
+		player.sendMessage(_messagePrefix.append(Component.text(message)));
+	}
+
+	public void logInfo(String messag) {
+		getLogger().info(_logPrefix + messag);
+	}
+
+	public void logWarning(String message) {
+		getLogger().warning(_logPrefix + message);
 	}
 }
