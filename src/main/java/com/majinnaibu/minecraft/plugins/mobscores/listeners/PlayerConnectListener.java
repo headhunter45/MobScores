@@ -15,12 +15,12 @@ You should have received a copy of the GNU Affero General Public License
 along with MobScores.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.majinnaibu.bukkitplugins.mobscores.listeners;
+package com.majinnaibu.minecraft.plugins.mobscores.listeners;
 
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 
-import com.majinnaibu.bukkitplugins.mobscores.MobScoresPlugin;
+import com.majinnaibu.minecraft.plugins.mobscores.MobScoresPlugin;
 
 public class PlayerConnectListener extends PlayerListener {
 private MobScoresPlugin _plugin = null; 
