@@ -20,12 +20,13 @@ package com.majinnaibu.minecraft.plugins.mobscores;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.logging.Level;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.plugin.PluginManager;
@@ -37,7 +38,7 @@ import com.majinnaibu.minecraft.plugins.scorekeeper.ScoreKeeperPlugin;
 
 public class MobScoresPlugin extends JavaPlugin {
 	private Map<Entity, Player> _claimedMobs = new HashMap<Entity, Player>();
-	private Map<String, Integer> _scoreTable = new HashMap<String, Integer>();
+	private Map<EntityType, Integer> _scoreTable = new HashMap<EntityType, Integer>();
 	private ScoreKeeperPlugin _scoreKeeper = null;
 
 	private final String _logPrefix = "[MobScores] ";
@@ -47,27 +48,24 @@ public class MobScoresPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		getConfig().set("ScoreTable", _scoreTable);
+		getConfig().set("ScoreTable", serializeScoreTable(_scoreTable));
 		saveConfig();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable() {
 		// Create the default config if it doesn't exist.
 		saveDefaultConfig();
 
+		getConfig().set("ScoreTable", serializeScoreTable(getDefaultScoreTable()));
+		saveConfig();
+
 		// Load our score table from config or set defaults.
-		if (getConfig().contains("ScoreTable")) {
-			Object rawValue = getConfig().get("ScoreTable");
-			if (rawValue instanceof Map) {
-				_scoreTable = new HashMap<>((Map<String, Integer>) rawValue);
-			} else {
-				_scoreTable = getDefaultScoreTable();
-			}
+		if (getConfig().isConfigurationSection("ScoreTable")) {
+			deserializeScoreTable(getConfig().getConfigurationSection("ScoreTable").getValues(false));
 		} else {
 			_scoreTable = getDefaultScoreTable();
-			getConfig().set("ScoreTable", _scoreTable);
+			getConfig().set("ScoreTable", serializeScoreTable(_scoreTable));
 			saveConfig();
 		}
 
@@ -75,6 +73,7 @@ public class MobScoresPlugin extends JavaPlugin {
 		_scoreKeeper = (ScoreKeeperPlugin)pm.getPlugin("ScoreKeeper");
 		
 		if(_scoreKeeper == null){
+			logWarning("Unable to find ScoreKeeper plugin.");
 			pm.disablePlugin(this);
 		}
 		
@@ -84,25 +83,30 @@ public class MobScoresPlugin extends JavaPlugin {
 		logInfo(getPluginMeta().getName() + " version " + getPluginMeta().getVersion() + " is enabled!");
 	}
 
-	private HashMap<String, Integer> getDefaultScoreTable() {
-		HashMap<String, Integer> scores = new HashMap<String, Integer>();
+	private HashMap<EntityType, Integer> getDefaultScoreTable() {
+		HashMap<EntityType, Integer> scores = new HashMap<EntityType, Integer>();
 		
-		scores.put("org.bukkit.craftbukkit.entity.CraftZombie", 50);
-		scores.put("org.bukkit.craftbukkit.entity.CraftChicken", 0);
-		scores.put("org.bukkit.craftbukkit.entity.CraftCow", 0);
-		scores.put("org.bukkit.craftbukkit.entity.CraftCreeper", 50);
-		scores.put("org.bukkit.craftbukkit.entity.CraftGhast", 100);
-		scores.put("org.bukkit.craftbukkit.entity.CraftGiant", 250);
-		scores.put("org.bukkit.craftbukkit.entity.CraftPig", 0);
-		scores.put("org.bukkit.craftbukkit.entity.CraftPigZombie", 25);
-		scores.put("org.bukkit.craftbukkit.entity.CraftPlayer", 0);
-		scores.put("org.bukkit.craftbukkit.entity.CraftSheep", 0);
-		scores.put("org.bukkit.craftbukkit.entity.CraftSkeleton", 50);
-		scores.put("org.bukkit.craftbukkit.entity.CraftSlime", 100);
-		scores.put("org.bukkit.craftbukkit.entity.CraftSpider", 50);
-		scores.put("org.bukkit.craftbukkit.entity.CraftSquid", 0);
-		scores.put("org.bukkit.craftbukkit.entity.CraftWolf", 50);
-		scores.put("org.bukkit.craftbukkit.entity.CraftZombie", 50);
+		scores.put(EntityType.BLAZE, 100);
+		scores.put(EntityType.CAVE_SPIDER, 100);
+		scores.put(EntityType.CREEPER, 50);
+		scores.put(EntityType.DROWNED, 25);
+		scores.put(EntityType.ELDER_GUARDIAN, 250);
+		scores.put(EntityType.ENDERMAN, 100);
+		scores.put(EntityType.ENDERMITE, 1000);
+		scores.put(EntityType.END_CRYSTAL, 250);
+		scores.put(EntityType.GHAST, 250);
+		scores.put(EntityType.GIANT, 250);
+		scores.put(EntityType.GUARDIAN, 250);
+		scores.put(EntityType.HUSK, 25);
+		scores.put(EntityType.PILLAGER, 25);
+		scores.put(EntityType.RAVAGER, 50);
+		scores.put(EntityType.SHULKER, 50);
+		scores.put(EntityType.SILVERFISH, 0);
+		scores.put(EntityType.SKELETON, 50);
+		scores.put(EntityType.WITHER_SKELETON, 100);
+		scores.put(EntityType.ZOMBIE, 25);
+		scores.put(EntityType.SLIME, 100);
+		scores.put(EntityType.SPIDER, 50);
 		
 		return scores;
 	}
@@ -110,48 +114,68 @@ public class MobScoresPlugin extends JavaPlugin {
 	public void claimMob(Entity entity, Player damager) {
 		if(entity instanceof Zombie){
 			_claimedMobs.put((Zombie)entity, damager);
-		}
-		
+		}	
 	}
 
 	public void awardScore(Entity entity) {
 
 		if(_claimedMobs.containsKey(entity)){
-			Class<?> scoreClass = entity.getClass();
-			String className = scoreClass.getName();
-			if(_scoreTable.containsKey(className)){
+			EntityType type = entity.getType();
+			if (_scoreTable.containsKey(type)) {
 				Player player = _claimedMobs.get(entity);
-				int score = _scoreTable.get(className);
-				
+				int score = _scoreTable.get(type);
 				_scoreKeeper.addScore(player, score);
-			}else{
-				logWarning("Unable to award score for {" + className + "}");
-				Set<String> keys = _scoreTable.keySet();
-				String str = null;
-				for(Iterator<String> i = keys.iterator(); i.hasNext(); str = i.next()){
-					logInfo("{" + str + "}");
-				}
+			} else {
+				logWarning("Unable to award score for {" + type.toString() + "}");
 			}
 		}	
 	}
 
 	public void sendPlayerScoreTable(Player player) {
-		Iterator<Map.Entry<String, Integer>> i=_scoreTable.entrySet().iterator();
-		Map.Entry<String, Integer> pair = null;
+		Iterator<Map.Entry<EntityType, Integer>> i = _scoreTable.entrySet().iterator();
+		Map.Entry<EntityType, Integer> pair = null;
 		for(pair = i.next(); i.hasNext(); pair = i.next()){
 			if(pair.getValue() != 0){
-				String key = pair.getKey();
-				if(key.startsWith("org.bukkit.craftbukkit.entity.Craft")){
-					sendPlayerMessage(player, key.substring(35) + " = " + pair.getValue().toString());
-				}else{
-					sendPlayerMessage(player, key + " = " + pair.getValue().toString());
-				}
+				EntityType type = pair.getKey();
+				Component entityName = Component.translatable(type.translationKey());
+				sendPlayerMessage(player, entityName + " = " + pair.getValue().toString());
 			}
 		}
 	}
 
+	private Map<EntityType, Integer> deserializeScoreTable(Map<String, Object> rawValue) {
+		HashMap<EntityType, Integer> scoreTable = new HashMap<>();
+		if (rawValue instanceof Map) {
+			scoreTable = new HashMap<>();
+			for (Map.Entry<String, Object> entry : rawValue.entrySet()) {
+				try {
+					EntityType type = EntityType.valueOf(entry.getKey());
+					Integer value = ((Number) entry.getValue()).intValue();
+					scoreTable.put(type, value);
+				} catch (Exception ex) {
+					logError(ex);
+				}
+			}
+			return scoreTable;
+		} else {
+			return getDefaultScoreTable();
+		}
+	}
+
+	private Map<String, Integer> serializeScoreTable(Map<EntityType, Integer> scoreTable) {
+        Map<String, Integer> serializable = new HashMap<>();
+        for (Map.Entry<EntityType, Integer> entry : scoreTable.entrySet()) {
+            serializable.put(entry.getKey().name(), entry.getValue());
+        }
+        return serializable;
+    }
+
 	public void sendPlayerMessage(Player player, String message) {
 		player.sendMessage(_messagePrefix.append(Component.text(message)));
+	}
+
+	public void logError(Exception ex) {
+		getLogger().log(Level.SEVERE, _logPrefix + ex.toString());
 	}
 
 	public void logInfo(String messag) {

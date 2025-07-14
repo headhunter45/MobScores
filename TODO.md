@@ -10,10 +10,10 @@
 - [x] Refactor all logger usage to use getLogger() from JavaPlugin.
 - [x] Refactor all event listeners to use the modern event system (Listener interface, @EventHandler, registerEvents).
 - [x] Replace use of org.bukkit.util.config.Configuration with the modern configuration API (getConfig(), saveConfig(), etc.).
-- [ ] Update score table to use Bukkit entity types or enums instead of CraftBukkit class names.
+- [x] Update score table to use Bukkit entity types or enums instead of CraftBukkit class names.
 - [ ] If storing player scores, refactor to use UUID as the key instead of Player or String.
-- [ ] Build the plugin with Gradle (./gradlew build) and test on a modern Paper server using the provided bash scripts. _(Depends on: all refactors and plugin.yml update)_
-- [ ] Address any bugs or incompatibilities found during testing on a modern server. _(Depends on: build and test)_
+- [x] Build the plugin with Gradle (./gradlew build) and test on a modern Paper server using the provided bash scripts.
+- [x] Address any bugs or incompatibilities found during testing on a modern server.
 - [ ] Update README.md and CONTRIBUTING.md with new build, usage, and development instructions. _(Depends on: bugfixes)_
 - [ ] (Optional) Add new features, quality-of-life improvements, automated tests, or CI configuration. _(Depends on: docs update)_
 - [x] Update MobScores to depend on the latest version of the ScoreKeeper plugin (update dependency in build.gradle and plugin.yml as needed).
