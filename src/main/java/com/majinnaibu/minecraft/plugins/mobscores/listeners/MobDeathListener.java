@@ -23,18 +23,19 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import com.majinnaibu.minecraft.plugins.mobscores.MobScoresPlugin;
 
-public class MobDeathListener extends EntityListener {
+public class MobDeathListener implements Listener {
 	private MobScoresPlugin _plugin = null; 
 	
 	public MobDeathListener(MobScoresPlugin plugin) {
 		_plugin = plugin;
 	}
 
-	@Override
+	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		if(event instanceof EntityDamageByEntityEvent){
 			EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) event;
@@ -45,12 +46,12 @@ public class MobDeathListener extends EntityListener {
 		}
 	}
 
-	@Override
+	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		_plugin.awardScore(event.getEntity());
 	}
 
-	@Override
+	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 	}
 

@@ -27,7 +27,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,8 +36,6 @@ import com.majinnaibu.minecraft.plugins.mobscores.listeners.PlayerConnectListene
 import com.majinnaibu.minecraft.plugins.scorekeeper.ScoreKeeperPlugin;
 
 public class MobScoresPlugin extends JavaPlugin {
-	private final MobDeathListener _mobDeathListener = new MobDeathListener(this);
-	private final PlayerConnectListener _playerConnectListener = new PlayerConnectListener(this);
 	private Map<Entity, Player> _claimedMobs = new HashMap<Entity, Player>();
 	private Map<String, Integer> _scoreTable = new HashMap<String, Integer>();
 	private ScoreKeeperPlugin _scoreKeeper = null;
@@ -80,9 +77,8 @@ public class MobScoresPlugin extends JavaPlugin {
 			pm.disablePlugin(this);
 		}
 		
-		pm.registerEvent(Event.Type.ENTITY_DEATH, _mobDeathListener, Event.Priority.Monitor, this);
-		pm.registerEvent(Event.Type.ENTITY_DAMAGE, _mobDeathListener, Event.Priority.Monitor, this);
-		pm.registerEvent(Event.Type.PLAYER_JOIN, _playerConnectListener, Event.Priority.Monitor, this);
+		pm.registerEvents(new MobDeathListener(this), this);
+		pm.registerEvents(new PlayerConnectListener(this), this);
 
 		PluginDescriptionFile pdFile = this.getDescription();
 		log.info(pdFile.getName() + " version " + pdFile.getVersion() + " is enabled!");
@@ -119,8 +115,7 @@ public class MobScoresPlugin extends JavaPlugin {
 	}
 
 	public void awardScore(Entity entity) {
-		// TODO Auto-generated method stub
-		
+				
 		if(_claimedMobs.containsKey(entity)){
 			Class<?> scoreClass = entity.getClass();
 			String className = scoreClass.getName();

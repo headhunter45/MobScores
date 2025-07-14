@@ -18,7 +18,7 @@
 - [ ] (Optional) Add new features, quality-of-life improvements, automated tests, or CI configuration. _(Depends on: docs update)_
 - [ ] Update MobScores to depend on the latest version of the ScoreKeeper plugin (update dependency in build.gradle and plugin.yml as needed).
 - [ ] Test MobScores with the latest ScoreKeeper to ensure score tracking, awarding, and all integration points work as expected (including with players who have changed names).
-- [ ] Refactor MobDeathListener and PlayerConnectListener to implement Listener interface and use @EventHandler annotations instead of extending EntityListener/PlayerListener.
-- [ ] Update event registration in MobScoresPlugin to use getServer().getPluginManager().registerEvents(...).
+- [x] Refactor MobDeathListener and PlayerConnectListener to implement Listener interface and use @EventHandler annotations instead of extending EntityListener/PlayerListener.
+- [x] Update event registration in MobScoresPlugin to use getServer().getPluginManager().registerEvents(...).
 - [ ] Replace all usage of org.bukkit.util.config.Configuration with the modern Bukkit configuration API (getConfig(), saveConfig(), reloadConfig(), etc.).
 - [ ] Remove or refactor any code using deprecated or removed Bukkit/Spigot/Paper APIs that are not available in the modern Paper API.

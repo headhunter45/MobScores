@@ -18,18 +18,19 @@ along with MobScores.  If not, see <http://www.gnu.org/licenses/>.
 package com.majinnaibu.minecraft.plugins.mobscores.listeners;
 
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 
 import com.majinnaibu.minecraft.plugins.mobscores.MobScoresPlugin;
 
-public class PlayerConnectListener extends PlayerListener {
+public class PlayerConnectListener implements Listener {
 private MobScoresPlugin _plugin = null; 
 	
 	public PlayerConnectListener(MobScoresPlugin plugin) {
 		_plugin = plugin;
 	}
 
-	@Override
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		_plugin.sendPlayerScoreTable(event.getPlayer());
 	}
