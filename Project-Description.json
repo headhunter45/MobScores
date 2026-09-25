@@ -1,0 +1,23 @@
+{
+  "id": "mob-scores",
+  "title": "MobScores",
+  "description": "Legacy Bukkit plugin that awards configurable scores for killing mobs.",
+  "docId": "MobScores",
+  "image": {
+    "url": "Retro Minecraft Bukkit server plugin artwork showing a blocky player defeating a hostile zombie, floating score numbers, a simple scoreboard motif, pixel-art style, dark forest-green and charcoal palette, no words or logos.",
+    "alt": "Pixel-art scene of a Minecraft player defeating a zombie with score numbers floating nearby",
+    "prompt": "Retro Minecraft Bukkit server plugin artwork showing a blocky player defeating a hostile zombie, floating score numbers, a simple scoreboard motif, pixel-art style, dark forest-green and charcoal palette, no words or logos.",
+    "width": 0,
+    "height": 0,
+    "backgroundClassName": "bg-surface"
+  },
+  "url": "/projects/mob-scores",
+  "tags": ["open-source"],
+  "source": {
+    "type": "",
+    "url": ""
+  },
+  "feedback": {
+    "url": ""
+  }
+}
