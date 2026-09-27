@@ -16,7 +16,7 @@
 | MS-12 |   Done   | If storing player scores, refactor to use UUID as the key instead of Player or String.
 | MS-13 |   Done   | Build the plugin with Gradle (./gradlew build) and test on a modern Paper server using the provided bash scripts.
 | MS-14 |   Done   | Address any bugs or incompatibilities found during testing on a modern server.
-| MS-15 |   Ready  | Update README.md and CONTRIBUTING.md with new build, usage, and development instructions. _(Depends on: bugfixes)_
+| MS-15 |   Done   | Update README.md and CONTRIBUTING.md with new build, usage, and development instructions. _(Depends on: bugfixes)_
 | MS-16 |   Ready  | (Optional) Add new features, quality-of-life improvements, automated tests, or CI configuration. _(Depends on: docs update)_
 | MS-17 |   Done   | Update MobScores to depend on the latest version of the ScoreKeeper plugin (update dependency in build.gradle and plugin.yml as needed).
 | MS-18 |   Ready  | Test MobScores with the latest ScoreKeeper to ensure score tracking, awarding, and all integration points work as expected (including with players who have changed names).
