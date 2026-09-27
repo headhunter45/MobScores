@@ -19,6 +19,7 @@ package com.majinnaibu.minecraft.plugins.mobscores;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -155,9 +156,9 @@ public class MobScoresPlugin extends JavaPlugin {
 		for (Map.Entry<EntityType, Integer> entry : _scoreTable.entrySet()) {
 			if (entry.getValue() != 0) {
 				EntityType type = entry.getKey();
-				Component message = Component.translatable(type.translationKey())
+				Component message = Component.translatable(Objects.requireNonNull(type.translationKey()))
 								.append(Component.text(" = "))
-								.append(Component.text(String.valueOf(entry.getValue()))
+								.append(Component.text(Objects.requireNonNull(String.valueOf(entry.getValue())))
 								.color(NamedTextColor.GREEN));
 				sendPlayerMessage(player, message);
 			}
@@ -192,11 +193,11 @@ public class MobScoresPlugin extends JavaPlugin {
     }
 
 	public void sendPlayerMessage(Player player, Component message) {
-		player.sendMessage(_messagePrefix.append(message));
+		player.sendMessage(_messagePrefix.append(Objects.requireNonNull(message)));
 	}
 
 	public void sendPlayerMessage(Player player, String message) {
-		player.sendMessage(_messagePrefix.append(Component.text(message)));
+		player.sendMessage(_messagePrefix.append(Component.text(Objects.requireNonNull(message))));
 	}
 
 	public void logError(Exception ex) {
