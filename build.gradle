@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.majinnaibu.minecraft.plugins:ScoreKeeper:0.2.2-SNAPSHOT'
+    compileOnly 'com.majinnaibu.minecraft.plugins:ScoreKeeper:0.2.2'
     compileOnly 'io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT'
 
     testImplementation libs.junit.junit

@@ -1,6 +1,6 @@
 {
-  "name": "MobScores",
-  "url": "https://modrinth.com/plugin/mobscores",
+  "name": "Mob Scores",
+  "url": "https://modrinth.com/plugin/mob-scores",
   "summary": "Award ScoreKeeper points for configured mob kills with a customizable per-entity score table.",
   "visibility": "public",
   "links": {

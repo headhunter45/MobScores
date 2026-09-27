@@ -6,7 +6,7 @@ MobScores awards ScoreKeeper points for configured mob kills. It is a Paper plug
 
 - Paper 1.21.7 or a compatible newer server.
 - Java 25 to build the plugin.
-- ScoreKeeper 0.2.2 or the version declared by `build.gradle`.
+- ScoreKeeper 0.2.2 or newer.
 
 Install both plugin JARs in the server's `plugins` directory. MobScores declares ScoreKeeper as a hard dependency, so it will not enable without it.
 
@@ -23,7 +23,7 @@ ScoreTable:
 
 Restart the server after editing the configuration. A configured value of `0` suppresses that entity from the score table shown to players when they join.
 
-MobScores has no commands of its own. It records credit for configured entity types damaged directly by a player or by a projectile fired by a player. Other mob attribution is not currently handled. Points are awarded through ScoreKeeper's existing player API and follow the player's UUID-backed score.
+MobScores has no commands of its own. It records credit for configured entity types damaged directly by a player or by a projectile fired by a player. Other mob attribution is not currently handled. Points go into ScoreKeeper's dedicated `mob-scores` bucket and are tracked by player UUID. Use `/score-bucket mob-scores` before `/score-get` to view mob points; MobScores does not change the player's active bucket automatically.
 
 ## Build
 

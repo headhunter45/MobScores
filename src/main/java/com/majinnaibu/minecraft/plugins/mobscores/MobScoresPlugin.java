@@ -36,6 +36,9 @@ import com.majinnaibu.minecraft.plugins.mobscores.listeners.PlayerConnectListene
 import com.majinnaibu.minecraft.plugins.scorekeeper.ScoreKeeperPlugin;
 
 public class MobScoresPlugin extends JavaPlugin {
+	private static final String SCORE_BUCKET_ID = "mob-scores";
+	private static final String MIN_SCORE_KEEPER_VERSION = "0.2.2";
+
 	private Map<UUID, UUID> _claimedMobs = new HashMap<UUID, UUID>();
 	private Map<EntityType, Integer> _scoreTable = new HashMap<EntityType, Integer>();
 	private ScoreKeeperPlugin _scoreKeeper = null;
@@ -66,11 +69,28 @@ public class MobScoresPlugin extends JavaPlugin {
 		}
 
 		PluginManager pm = getServer().getPluginManager();
-		_scoreKeeper = (ScoreKeeperPlugin)pm.getPlugin("ScoreKeeper");
+		ScoreKeeperPlugin scoreKeeper = (ScoreKeeperPlugin)pm.getPlugin("ScoreKeeper");
 		
-		if(_scoreKeeper == null){
+		if (scoreKeeper == null) {
 			logWarning("Unable to find ScoreKeeper plugin.");
 			pm.disablePlugin(this);
+			return;
+		}
+
+		String scoreKeeperVersion = scoreKeeper.getPluginMeta().getVersion();
+		if (!isVersionAtLeast(scoreKeeperVersion, MIN_SCORE_KEEPER_VERSION)) {
+			logWarning(
+					"ScoreKeeper "
+							+ MIN_SCORE_KEEPER_VERSION
+							+ " or newer is required; found "
+							+ scoreKeeperVersion
+							+ ".");
+			pm.disablePlugin(this);
+			return;
+		}
+		_scoreKeeper = scoreKeeper;
+		if (_scoreKeeper.getBucket(SCORE_BUCKET_ID) == null) {
+			_scoreKeeper.createBucket(SCORE_BUCKET_ID, "mob point", "mob points", 0);
 		}
 		
 		pm.registerEvents(new MobDeathListener(this), this);
@@ -124,7 +144,7 @@ public class MobScoresPlugin extends JavaPlugin {
 					return;
 				}
 				int score = _scoreTable.get(type);
-				_scoreKeeper.addScore(player, score);
+				_scoreKeeper.addScore(player, SCORE_BUCKET_ID, score);
 			} else {
 				logWarning("Unable to award score for {" + type.toString() + "}");
 			}
@@ -189,5 +209,54 @@ public class MobScoresPlugin extends JavaPlugin {
 
 	public void logWarning(String message) {
 		getLogger().warning(_logPrefix + message);
+	}
+
+	private boolean isVersionAtLeast(String version, String minimumVersion) {
+		int[] actual = parseVersion(version);
+		int[] minimum = parseVersion(minimumVersion);
+		if (actual == null || minimum == null) {
+			return false;
+		}
+		for (int index = 0; index < actual.length; index++) {
+			if (actual[index] != minimum[index]) {
+				return actual[index] > minimum[index];
+			}
+		}
+		return !isPrerelease(version);
+	}
+
+	private int[] parseVersion(String version) {
+		if (version == null) {
+			return null;
+		}
+		String coreVersion = version.replaceFirst("^[vV]", "");
+		int metadataIndex = coreVersion.indexOf('+');
+		if (metadataIndex >= 0) {
+			coreVersion = coreVersion.substring(0, metadataIndex);
+		}
+		int prereleaseIndex = coreVersion.indexOf('-');
+		if (prereleaseIndex >= 0) {
+			coreVersion = coreVersion.substring(0, prereleaseIndex);
+		}
+		String[] parts = coreVersion.split("\\.");
+		if (parts.length < 3) {
+			return null;
+		}
+		try {
+			return new int[] {
+					Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2])
+			};
+		} catch (NumberFormatException ex) {
+			return null;
+		}
+	}
+
+	private boolean isPrerelease(String version) {
+		String release = version.replaceFirst("^[vV]", "");
+		int metadataIndex = release.indexOf('+');
+		if (metadataIndex >= 0) {
+			release = release.substring(0, metadataIndex);
+		}
+		return release.indexOf('-') >= 0;
 	}
 }
