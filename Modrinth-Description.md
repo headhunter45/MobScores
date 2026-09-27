@@ -4,15 +4,17 @@ MobScores awards ScoreKeeper points for configured mob kills. Set a score for ea
 
 ## Requirements
 
-- Paper 1.21.7 or a compatible newer server.
+- Paper 26.2 or 26.3.
 - Java 25 or newer at runtime and for building.
 - ScoreKeeper 0.2.2 or newer.
 
 Install ScoreKeeper and MobScores in the server's `plugins` directory. ScoreKeeper is a required dependency and must be enabled for MobScores to load.
 
+MobScores targets Paper only; Bukkit and Spigot servers are not supported.
+
 ## Configuration
 
-MobScores creates `plugins/MobScores/config.yml` from its defaults. Edit `ScoreTable` to configure point values by Bukkit `EntityType` name:
+MobScores creates `plugins/MobScores/config.yml` from its defaults. Edit `ScoreTable` to configure point values by Paper API `EntityType` name:
 
 ```yaml
 ScoreTable:

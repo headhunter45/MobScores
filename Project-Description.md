@@ -1,16 +1,12 @@
 # MobScores
 
-MobScores is a legacy Bukkit plugin that awards configurable scores to players for killing mobs. It works with the `ScoreKeeper` plugin, records the player who last damaged a mob, and awards the configured value when that mob dies.
+MobScores turns combat into a configurable scoring system. When a player damages a tracked mob, the plugin remembers the attribution and awards the matching ScoreKeeper bucket when that mob dies, including projectile kills.
 
-## Details
+It is a deliberately small Paper integration plugin with a clear boundary: Paper entity events on one side, ScoreKeeper's public scoring API on the other. The per-entity score table is configurable, zero-value entries can be disabled, and players see the active mob-score table when they join. It targets Paper 26.2 and 26.3 only, not Bukkit or Spigot.
 
-- Platform: Bukkit/Minecraft server plugin
-- Language: Java
-- Dependency: ScoreKeeper
-- Configuration: `plugins/MobScores/config.yml`
-- Commands: None
-- License: GNU Affero General Public License v3
+## Engineering Notes
 
-## Image prompt
-
-Retro Minecraft Bukkit server plugin artwork showing a blocky player defeating a hostile zombie, floating score numbers, a simple scoreboard motif, pixel-art style, dark forest-green and charcoal palette, no words or logos.
+- Built for modern Paper with Java 25 and Gradle.
+- Uses UUID-safe player attribution.
+- Depends on ScoreKeeper 0.2.2 or newer.
+- Tested through the standard server-free build workflow.

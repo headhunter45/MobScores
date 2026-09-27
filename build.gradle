@@ -38,7 +38,7 @@ repositories {
 dependencies {
     // Group is always 'maven.modrinth', module is your project slug/id
     compileOnly 'maven.modrinth:scorekeeper:0.2.2'
-    compileOnly 'io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.2.build.129-stable'
 
     testImplementation libs.junit.junit
 }

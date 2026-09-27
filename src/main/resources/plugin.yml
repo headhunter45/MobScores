@@ -2,4 +2,4 @@ name: MobScores
 main: com.majinnaibu.minecraft.plugins.mobscores.MobScoresPlugin
 depend: [ScoreKeeper]
 version: ${version}
-api-version: 1.21
+api-version: '26.2'
