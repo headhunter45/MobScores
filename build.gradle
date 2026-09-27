@@ -18,16 +18,30 @@ gitSemVer {
 repositories {
     mavenCentral()
     maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+
+    // Modrinth Maven repository for ScoreKeeper
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Modrinth'
+                url = 'https://api.modrinth.com/maven'
+            }
+        }
+        filter {
+            includeGroup 'maven.modrinth'
+        }
+    }
+
     mavenLocal()
 }
 
 dependencies {
-    compileOnly 'com.majinnaibu.minecraft.plugins:ScoreKeeper:0.2.2'
+    // Group is always 'maven.modrinth', module is your project slug/id
+    compileOnly 'maven.modrinth:scorekeeper:0.2.2'
     compileOnly 'io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT'
 
     testImplementation libs.junit.junit
 }
-
 
 group = 'com.majinnaibu.minecraft.plugins'
 description = 'MobScores'
