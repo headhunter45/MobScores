@@ -5,6 +5,7 @@
  */
 
 plugins {
+    id 'com.diffplug.spotless' version '8.10.3'
     id 'java-library'
     id 'maven-publish'
     id 'org.danilopianini.git-sensitive-semantic-versioning' version '7.0.24'
@@ -89,5 +90,16 @@ processResources {
     inputs.property "version", pluginVersion
     filesMatching('plugin.yml') {
         expand(version: pluginVersion)
+    }
+}
+
+spotless {
+    java {
+        googleJavaFormat('1.36.1')
+        importOrder 'java', 'javax', 'com', 'net', 'org', ''
+        licenseHeaderFile 'config/license-header.txt'
+        target 'src/**/*.java'
+        removeUnusedImports()
+        toggleOffOn()
     }
 }
