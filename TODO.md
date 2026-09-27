@@ -19,7 +19,7 @@
 | MS-15 |   Done   | Update README.md and CONTRIBUTING.md with new build, usage, and development instructions. _(Depends on: bugfixes)_
 | MS-16 |   Done   | (Optional) Add new features, quality-of-life improvements, automated tests, or CI configuration. _(Depends on: docs update)_
 | MS-17 |   Done   | Update MobScores to depend on the latest version of the ScoreKeeper plugin (update dependency in build.gradle and plugin.yml as needed).
-| MS-18 |   Ready  | Test MobScores with the latest ScoreKeeper to ensure score tracking, awarding, and all integration points work as expected (including with players who have changed names).
+| MS-18 |   Done   | Test MobScores with the latest ScoreKeeper to ensure score tracking, awarding, and all integration points work as expected (including with players who have changed names).
 | MS-19 |   Done   | Refactor MobDeathListener and PlayerConnectListener to implement Listener interface and use @EventHandler annotations instead of extending EntityListener/PlayerListener.
 | MS-20 |   Done   | Update event registration in MobScoresPlugin to use getServer().getPluginManager().registerEvents(...).
 | MS-21 |   Done   | Replace all usage of org.bukkit.util.config.Configuration with the modern Bukkit configuration API (getConfig(), saveConfig(), reloadConfig(), etc.).
