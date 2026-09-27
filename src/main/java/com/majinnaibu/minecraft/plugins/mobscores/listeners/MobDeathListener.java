@@ -19,6 +19,7 @@ package com.majinnaibu.minecraft.plugins.mobscores.listeners;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -37,12 +38,19 @@ public class MobDeathListener implements Listener {
 
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
-		if(event instanceof EntityDamageByEntityEvent){
-			EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) event;
-			Entity damager = ev.getDamager();
-			if(damager instanceof Player){
-				_plugin.claimMob(ev.getEntity(), (Player)damager);
-			}
+		if (!(event instanceof EntityDamageByEntityEvent damageEvent)) {
+			return;
+		}
+		Entity damager = damageEvent.getDamager();
+		Player creditedPlayer = null;
+		if (damager instanceof Player directPlayer) {
+			creditedPlayer = directPlayer;
+		} else if (damager instanceof Projectile projectile
+				&& projectile.getShooter() instanceof Player projectileShooter) {
+			creditedPlayer = projectileShooter;
+		}
+		if (creditedPlayer != null) {
+			_plugin.claimMob(event.getEntity(), creditedPlayer);
 		}
 	}
 

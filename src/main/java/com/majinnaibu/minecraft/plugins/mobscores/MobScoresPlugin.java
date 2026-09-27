@@ -18,7 +18,6 @@ along with MobScores.  If not, see <http://www.gnu.org/licenses/>.
 package com.majinnaibu.minecraft.plugins.mobscores;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -29,7 +28,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,12 +56,9 @@ public class MobScoresPlugin extends JavaPlugin {
 		// Create the default config if it doesn't exist.
 		saveDefaultConfig();
 
-		getConfig().set("ScoreTable", serializeScoreTable(getDefaultScoreTable()));
-		saveConfig();
-
 		// Load our score table from config or set defaults.
 		if (getConfig().isConfigurationSection("ScoreTable")) {
-			deserializeScoreTable(getConfig().getConfigurationSection("ScoreTable").getValues(false));
+			_scoreTable = deserializeScoreTable(getConfig().getConfigurationSection("ScoreTable").getValues(false));
 		} else {
 			_scoreTable = getDefaultScoreTable();
 			getConfig().set("ScoreTable", serializeScoreTable(_scoreTable));
@@ -113,7 +108,7 @@ public class MobScoresPlugin extends JavaPlugin {
 	}
 
 	public void claimMob(Entity entity, Player damager) {
-		if(entity instanceof Zombie){
+		if (_scoreTable.containsKey(entity.getType())) {
 			_claimedMobs.put(entity.getUniqueId(), damager.getUniqueId());
 		}	
 	}
@@ -137,14 +132,12 @@ public class MobScoresPlugin extends JavaPlugin {
 	}
 
 	public void sendPlayerScoreTable(Player player) {
-		Iterator<Map.Entry<EntityType, Integer>> i = _scoreTable.entrySet().iterator();
-		Map.Entry<EntityType, Integer> pair = null;
-		for(pair = i.next(); i.hasNext(); pair = i.next()){
-			if(pair.getValue() != 0){
-				EntityType type = pair.getKey();
+		for (Map.Entry<EntityType, Integer> entry : _scoreTable.entrySet()) {
+			if (entry.getValue() != 0) {
+				EntityType type = entry.getKey();
 				Component message = Component.translatable(type.translationKey())
 								.append(Component.text(" = "))
-								.append(Component.text(String.valueOf(pair.getValue()))
+								.append(Component.text(String.valueOf(entry.getValue()))
 								.color(NamedTextColor.GREEN));
 				sendPlayerMessage(player, message);
 			}

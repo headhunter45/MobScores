@@ -23,7 +23,7 @@ ScoreTable:
 
 Restart the server after editing the configuration. A configured value of `0` suppresses that entity from the score table shown to players when they join.
 
-MobScores has no commands of its own. Current killer attribution is recorded for zombie entities directly damaged by a player; projectile and other mob attribution are not currently handled. Points are awarded through ScoreKeeper's existing player API and follow the player's UUID-backed score.
+MobScores has no commands of its own. It records credit for configured entity types damaged directly by a player or by a projectile fired by a player. Other mob attribution is not currently handled. Points are awarded through ScoreKeeper's existing player API and follow the player's UUID-backed score.
 
 ## Build
 
