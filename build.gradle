@@ -7,6 +7,12 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'org.danilopianini.git-sensitive-semantic-versioning' version '7.0.24'
+}
+
+gitSemVer {
+    minimumVersion.set('0.2.1')
+    versionPrefix.set('v')
 }
 
 repositories {
@@ -24,7 +30,6 @@ dependencies {
 
 
 group = 'com.majinnaibu.minecraft.plugins'
-version = '0.2.1-SNAPSHOT'
 description = 'MobScores'
 
 java {
@@ -60,13 +65,15 @@ tasks.withType(JavaCompile).configureEach {
     // options.compilerArgs << "-Xlint:deprecation"
 }
 
-tasks.withType(Javadoc) {
+tasks.withType(Javadoc).configureEach {
     options.encoding = 'UTF-8'
 }
 
+def pluginVersion = project.version.toString()
+
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", pluginVersion
     filesMatching('plugin.yml') {
-        expand(project.properties)
+        expand(version: pluginVersion)
     }
 }
