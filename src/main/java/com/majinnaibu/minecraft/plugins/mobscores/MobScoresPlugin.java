@@ -20,6 +20,7 @@ package com.majinnaibu.minecraft.plugins.mobscores;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import net.kyori.adventure.text.Component;
@@ -37,7 +38,7 @@ import com.majinnaibu.minecraft.plugins.mobscores.listeners.PlayerConnectListene
 import com.majinnaibu.minecraft.plugins.scorekeeper.ScoreKeeperPlugin;
 
 public class MobScoresPlugin extends JavaPlugin {
-	private Map<Entity, Player> _claimedMobs = new HashMap<Entity, Player>();
+	private Map<UUID, UUID> _claimedMobs = new HashMap<UUID, UUID>();
 	private Map<EntityType, Integer> _scoreTable = new HashMap<EntityType, Integer>();
 	private ScoreKeeperPlugin _scoreKeeper = null;
 
@@ -113,16 +114,20 @@ public class MobScoresPlugin extends JavaPlugin {
 
 	public void claimMob(Entity entity, Player damager) {
 		if(entity instanceof Zombie){
-			_claimedMobs.put((Zombie)entity, damager);
+			_claimedMobs.put(entity.getUniqueId(), damager.getUniqueId());
 		}	
 	}
 
 	public void awardScore(Entity entity) {
-
-		if(_claimedMobs.containsKey(entity)){
+		UUID playerId = _claimedMobs.remove(entity.getUniqueId());
+		if(playerId != null){
 			EntityType type = entity.getType();
 			if (_scoreTable.containsKey(type)) {
-				Player player = _claimedMobs.get(entity);
+				Player player = getServer().getPlayer(playerId);
+				if (player == null) {
+					logWarning("Unable to award score because the credited player is offline.");
+					return;
+				}
 				int score = _scoreTable.get(type);
 				_scoreKeeper.addScore(player, score);
 			} else {

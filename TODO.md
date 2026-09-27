@@ -13,7 +13,7 @@
 | MS-09 |   Done   | Refactor all event listeners to use the modern event system (Listener interface, @EventHandler, registerEvents).
 | MS-10 |   Done   | Replace use of org.bukkit.util.config.Configuration with the modern configuration API (getConfig(), saveConfig(), etc.).
 | MS-11 |   Done   | Update score table to use Bukkit entity types or enums instead of CraftBukkit class names.
-| MS-12 |   Ready  | If storing player scores, refactor to use UUID as the key instead of Player or String.
+| MS-12 |   Done   | If storing player scores, refactor to use UUID as the key instead of Player or String.
 | MS-13 |   Done   | Build the plugin with Gradle (./gradlew build) and test on a modern Paper server using the provided bash scripts.
 | MS-14 |   Done   | Address any bugs or incompatibilities found during testing on a modern server.
 | MS-15 |   Ready  | Update README.md and CONTRIBUTING.md with new build, usage, and development instructions. _(Depends on: bugfixes)_
