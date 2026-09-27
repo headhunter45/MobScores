@@ -28,4 +28,3 @@ MobScores has no commands of its own. It records credit for configured entity ty
 ## Build
 
 Run `./gradlew test` and `./gradlew build` from the project root. See [CONTRIBUTING.md](CONTRIBUTING.md) for toolchain, local server, and helper-script details.
-

@@ -8,7 +8,7 @@
 | MS-04 |   Done   | Initialize Gradle in the project root and create a build.gradle file with project metadata, PaperMC API dependency, JUnit, Java toolchain, repository, resource handling, and plugins as needed. |
 | MS-05 |   Done   | Remove Maven-specific files (pom.xml, .mvn/ directory, Maven wrapper scripts) and Eclipse-specific files (.classpath, .project, .settings/) if present. |
 | MS-06 |   Done   | Update .gitignore to add Gradle-specific ignores and remove Maven/Eclipse-specific ignores. |
-| MS-07 |   Done   |Ensure plugin.yml is present in src/main/resources and update for PaperMC compatibility (api-version, commands, required fields). |
+| MS-07 |   Done   | Ensure plugin.yml is present in src/main/resources and update for PaperMC compatibility (api-version, commands, required fields). |
 | MS-08 |   Done   | Refactor all logger usage to use getLogger() from JavaPlugin. |
 | MS-09 |   Done   | Refactor all event listeners to use the modern event system (Listener interface, @EventHandler, registerEvents).
 | MS-10 |   Done   | Replace use of org.bukkit.util.config.Configuration with the modern configuration API (getConfig(), saveConfig(), etc.).
