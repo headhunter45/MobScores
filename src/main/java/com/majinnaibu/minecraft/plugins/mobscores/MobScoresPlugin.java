@@ -137,8 +137,11 @@ public class MobScoresPlugin extends JavaPlugin {
 		for(pair = i.next(); i.hasNext(); pair = i.next()){
 			if(pair.getValue() != 0){
 				EntityType type = pair.getKey();
-				Component entityName = Component.translatable(type.translationKey());
-				sendPlayerMessage(player, entityName + " = " + pair.getValue().toString());
+				Component message = Component.translatable(type.translationKey())
+								.append(Component.text(" = "))
+								.append(Component.text(String.valueOf(pair.getValue()))
+								.color(NamedTextColor.GREEN));
+				sendPlayerMessage(player, message);
 			}
 		}
 	}
@@ -169,6 +172,10 @@ public class MobScoresPlugin extends JavaPlugin {
         }
         return serializable;
     }
+
+	public void sendPlayerMessage(Player player, Component message) {
+		player.sendMessage(_messagePrefix.append(message));
+	}
 
 	public void sendPlayerMessage(Player player, String message) {
 		player.sendMessage(_messagePrefix.append(Component.text(message)));

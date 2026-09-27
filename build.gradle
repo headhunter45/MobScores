@@ -16,12 +16,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.majinnaibu.minecraft.plugins:ScoreKeeper:0.2.1-SNAPSHOT'
+    compileOnly 'com.majinnaibu.minecraft.plugins:ScoreKeeper:0.2.2-SNAPSHOT'
     compileOnly 'io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT'
-    compileOnly 'net.kyori:adventure-api:4.14.0' 
 
     testImplementation libs.junit.junit
 }
+
 
 group = 'com.majinnaibu.minecraft.plugins'
 version = '0.2.1-SNAPSHOT'
@@ -29,8 +29,22 @@ description = 'MobScores'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        // Paper 26.1+ requires Java 25.
+        languageVersion = JavaLanguageVersion.of(25)
     }
+}
+
+tasks.named('wrapper') {
+    gradleVersion = '9.8.0'
+    distributionType = Wrapper.DistributionType.BIN
+    distributionBase = Wrapper.PathBase.PROJECT
+    distributionPath = '.gradle/wrapper/dists'
+    archiveBase = Wrapper.PathBase.PROJECT
+    archivePath = '.gradle/wrapper/dists'
+}
+
+tasks.named('updateDaemonJvm') {
+    languageVersion = JavaLanguageVersion.of(25)
 }
 
 publishing {
