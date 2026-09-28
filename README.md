@@ -1,5 +1,7 @@
 # MobScores
 
+[![Java CI with Gradle](https://github.com/headhunter45/MobScores/actions/workflows/gradle.yml/badge.svg)](https://github.com/headhunter45/MobScores/actions/workflows/gradle.yml)
+
 MobScores awards ScoreKeeper points for configured mob kills. It is a Paper-only plugin for Paper 26.2 and 26.3, and requires the ScoreKeeper plugin to be installed and enabled first.
 
 ## Requirements
