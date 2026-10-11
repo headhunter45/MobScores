@@ -1,41 +1,77 @@
-# MobScores Human Testing
+# Mob Scores manual pre-release checklist
 
-Use this checklist on a disposable Paper 26.2 or 26.3 server with Java 25+, MobScores, and ScoreKeeper 0.2.2 or newer installed. MobScores depends on ScoreKeeper for its `mob-scores` bucket, and its main behavior is driven by real combat and player-join events.
+This is a list of manual scenarios, not a record of tests already performed.
+Use a disposable Paper 26.2 or 26.3 server running Java 25 or newer, with
+Mob Scores and ScoreKeeper 0.2.2 or newer. Keep the server log visible.
 
-## Test Setup
+## Test setup
 
-- Back up the world and both plugin data folders. Configure a test server with the same plugin versions intended for production.
-- Use at least two ordinary player accounts and an operator for setup. Keep the server log visible to catch dependency, config, and offline-award warnings.
-- Save the generated `plugins/MobScores/config.yml` before changing it. Restart after config edits; MobScores reads the score table during plugin startup.
-- Record player UUIDs, mob types, configured values, active score buckets, and scores before and after each kill.
+- Back up the test world and plugin data folders. Never test against data that
+  cannot be safely replaced.
+- Use two ordinary player accounts and an operator for setup.
+- Let Mob Scores create `plugins/MobScores/config.yml` on first startup.
+  Configure the `ScoreTable` while the server is stopped; the plugin reads the
+  table on startup and saves it to YAML at shutdown.
+- Record player UUIDs, entity types, configured scores, active ScoreKeeper
+  buckets, and numeric scores before and after each scenario.
 
-## Human Checklist
+## Manual checklist
 
-### Plugin loading and configuration
+### Loading and configuration
 
-- Start with both plugins installed. Confirm ScoreKeeper loads before MobScores, MobScores enables, and the `mob-scores` bucket exists with the expected labels and initial value.
-- On a disposable server, test startup without ScoreKeeper and with a ScoreKeeper version older than 0.2.2. Paper should reject the missing hard dependency; MobScores should disable itself with a version warning for an outdated dependency. Then restore the supported version.
-- On first startup, inspect the generated `ScoreTable`. Confirm the documented default entity values are present, including a zero-valued entry.
-- Change a few values, restart, and verify they are loaded and preserved. Include a zero value and an unknown entity key; confirm zero-valued entities are omitted from join messages and invalid entries are logged without preventing valid entries from loading.
-- Confirm the table uses Paper `EntityType` names and that malformed values or a missing score-table section are handled as intended.
+- With both plugins installed, verify ScoreKeeper loads and Mob Scores enables.
+  Verify the `mob-scores` bucket exists with singular label `mob point`,
+  plural label `mob points`, and initial score `0`.
+- On a disposable server, start without ScoreKeeper and then with a version
+  older than 0.2.2. The hard dependency should prevent loading when missing;
+  with an older installed version, Mob Scores should log a version warning
+  and disable itself.
+- On first startup, compare the generated `ScoreTable` with the defaults in
+  `src/main/resources/config.yml`, including the zero-valued `SILVERFISH`.
+- Change valid values and restart. Confirm the values are loaded and written
+  back on shutdown. Include an unknown entity key and a malformed value:
+  verify each is logged and skipped while valid entries still load. After
+  shutdown, confirm only the loaded valid entries remain in the saved table.
+- Remove the `ScoreTable` section on a disposable test and restart. Verify the
+  default table is used and written to the configuration.
 
-### Kill credit and scoring
+### Attribution and scoring
 
-- As a player, kill configured entities using direct melee damage and player-fired projectiles. Confirm the expected points are added to that player's `mob-scores` score.
-- Check the boundary cases: a non-player attacker, environmental death, an entity type absent from the table, and a configured zero-point entity. Confirm no unintended points are awarded.
-- Have two players damage the same mob before it dies. The current implementation records the most recent direct or player-projectile attacker; verify that this credit policy matches the server's expectations.
-- Damage a mob with a player, then let it die from fall, fire, or another environmental cause. Confirm whether retaining that player's credit is the intended behavior; the current implementation keeps the last recorded player attribution until the mob dies.
-- Test a player who disconnects after damaging the mob but before it dies. The current implementation cannot award an offline player and logs a warning; confirm this is acceptable and that no other player's score changes.
-- Check mob death without any previous qualifying player damage, and verify no stale or reused entity attribution grants points.
+- Kill configured entities using direct player damage and player-fired
+  projectiles. Confirm the latest qualifying player's numeric score increases
+  by the configured amount in `mob-scores`.
+- Have two players damage the same tracked entity. Confirm the player with the
+  most recent direct or player-projectile hit receives credit.
+- After a player damages a tracked entity, let it die from fall, fire, or
+  another environmental cause. Confirm the last recorded player still receives
+  credit if online at death; environmental damage does not clear attribution.
+- Kill an entity with no prior qualifying player damage. Confirm no score
+  increase. Repeat with a type absent from `ScoreTable` and with non-player
+  damage that has no previous player attribution.
+- Configure an entity type with value `0`. Confirm it does not increase the
+  numeric score and is omitted from the join-time table.
+- Disconnect the credited player before the entity dies. Confirm no numeric
+  score is awarded and the log reports that the credited player is offline.
+- In multiplayer combat and after chunk unload/reload, confirm attribution
+  does not move to another player and a death does not reuse a previous
+  entity's attribution.
 
-### Player messaging and ScoreKeeper workflows
+### Join messages and ScoreKeeper workflows
 
-- Join with a player account. Confirm the MobScores score table is sent once, includes configured nonzero entity types with the right values, and excludes zero-valued types.
-- Run `/score-bucket mob-scores` followed by `/score-get`. Confirm the score reflects kills and the bucket switch message uses the expected singular/plural label. Verify MobScores does not change the player's active bucket automatically on join or kill.
-- Give two players different kill totals and switch between `mob-scores` and another ScoreKeeper bucket. Confirm each bucket retains its own value and MobScores awards only to `mob-scores`.
-- Restart the server and verify MobScores retains its configured table and ScoreKeeper retains the players' mob scores. Reconnect and confirm the join table still matches the active config.
-- Exercise normal gameplay around claimed mobs: unload/reload chunks, kill several entities rapidly, and test multiplayer combat. Watch for missed, duplicated, or cross-player awards.
+- Join with a player account. Confirm each nonzero configured entity type and
+  value is sent, and zero-valued entries are omitted. Message ordering is not
+  guaranteed.
+- Run `/score-bucket mob-scores` followed by `/score-get`. Confirm it reports
+  the awarded numeric score. Switch to another ScoreKeeper bucket and back;
+  Mob Scores should only add points to `mob-scores` and should not switch the
+  active bucket on join or kill.
+- Restart the server, reconnect, and verify the YAML score table and
+  ScoreKeeper-managed score totals are available as before.
 
-## Automated Coverage
+## Automated coverage and checks
 
-There are currently no Java test sources in MobScores and no `integrationTest` source set/task. Although Gradle declares JUnit, `./gradlew test` currently has no MobScores behavior tests. The testing tasks marked “Ready” in `TODO.md` have not been implemented. Build success alone does not verify real event attribution or compatibility with the installed ScoreKeeper jar.
+Mob Scores currently has no Java test sources and no `integrationTest` task.
+Gradle declares a JUnit dependency, but `./gradlew test` has no tests to run
+(`NO-SOURCE`). CI runs the Gradle test task and build; neither proves event
+attribution or live Paper/ScoreKeeper compatibility. This checklist is for
+manual pre-release verification only; record actual results separately.

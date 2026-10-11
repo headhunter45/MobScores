@@ -1,7 +1,7 @@
 {
   "name": "Mob Scores",
   "url": "https://modrinth.com/plugin/mob-scores",
-  "summary": "Award ScoreKeeper points for configured mob kills with a customizable per-entity score table.",
+  "summary": "Add configurable entity-kill scoring to ScoreKeeper on Paper 26.2/26.3.",
   "visibility": "public",
   "links": {
     "issueTracker": "https://github.com/headhunter45/MobScores/issues",

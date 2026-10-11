@@ -1,23 +1,29 @@
 {
-  "id": "mob-scores",
-  "title": "MobScores",
-  "description": "A Paper 26.2/26.3 integration plugin that attributes mob kills, including projectile kills, and awards configurable ScoreKeeper points by entity type.",
-  "docId": "MobScores",
-  "image": {
-    "url": "Retro Minecraft Paper server plugin artwork showing a blocky player defeating a hostile zombie, floating score numbers, a simple scoreboard motif, pixel-art style, dark forest-green and charcoal palette, no words or logos.",
-    "alt": "Pixel-art scene of a Minecraft player defeating a zombie with score numbers floating nearby",
-    "prompt": "Retro Minecraft Paper server plugin artwork showing a blocky player defeating a hostile zombie, floating score numbers, a simple scoreboard motif, pixel-art style, dark forest-green and charcoal palette, no words or logos.",
-    "width": 0,
-    "height": 0,
-    "backgroundClassName": "bg-surface"
-  },
-  "url": "/projects/mob-scores",
-  "tags": ["open-source"],
-  "source": {
-    "type": "",
-    "url": ""
-  },
-  "feedback": {
-    "url": ""
+  "mob-scores": {
+    "id": "mob-scores",
+    "title": "Mob Scores",
+    "description": "A Paper 26.2/26.3 plugin that awards configurable ScoreKeeper points for configured entities last damaged by a player or player-fired projectile, when that player is online at death.",
+    "docId": "Mob-Scores",
+    "headerImage": null,
+    "platforms": [
+      { "name": "Minecraft", "info": "Paper server plugin (Paper 26.2/26.3 only)" }
+    ],
+    "image": {
+      "url": "/projects/mob-scores/logo.png",
+      "alt": "Mob Scores Minecraft plugin logo",
+      "width": 1024,
+      "height": 1024,
+      "backgroundClassName": "bg-surface"
+    },
+    "url": "/projects/mob-scores",
+    "tags": ["Open-Source", "Game", "Minecraft"],
+    "source": {
+      "type": "github",
+      "url": "https://github.com/headhunter45/MobScores"
+    },
+    "feedback": {
+      "type": "github-issues",
+      "url": "https://github.com/headhunter45/MobScores/issues"
+    }
   }
 }

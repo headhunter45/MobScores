@@ -1,20 +1,26 @@
-# MobScores
+# Mob Scores
 
 [![Java CI with Gradle](https://github.com/headhunter45/MobScores/actions/workflows/gradle.yml/badge.svg)](https://github.com/headhunter45/MobScores/actions/workflows/gradle.yml)
 
-MobScores awards ScoreKeeper points for configured mob kills. It is a Paper-only plugin for Paper 26.2 and 26.3, and requires the ScoreKeeper plugin to be installed and enabled first.
+Mob Scores adds configurable entity-kill scoring to the required ScoreKeeper
+plugin. It targets Paper 26.2 and 26.3 only; Bukkit and Spigot are not
+supported.
 
-## Requirements
+## Requirements and installation
 
-- Paper 26.2 or 26.3.
-- Java 25 to build the plugin.
-- ScoreKeeper 0.2.2 or newer.
+- Paper 26.2 or 26.3 with Java 25 or newer.
+- ScoreKeeper 0.2.2 or newer, installed and enabled before Mob Scores.
 
-Install both plugin JARs in the server's `plugins` directory. MobScores declares ScoreKeeper as a hard dependency, so it will not enable without it. Bukkit and Spigot servers are not supported.
+Place both plugin JARs in the server's `plugins` directory. Mob Scores declares
+ScoreKeeper as a hard dependency, so Paper will not enable Mob Scores without
+it. If the installed ScoreKeeper version is older than 0.2.2, Mob Scores logs a
+version warning and disables itself.
 
-## Score Table
+## Configuration
 
-On first startup, MobScores creates `plugins/MobScores/config.yml` with default scores for supported entity types. Edit the `ScoreTable` mapping to change points; keys are Paper API `EntityType` names and values are integer points:
+On first startup, Mob Scores creates `plugins/MobScores/config.yml` with a
+default `ScoreTable`. Configure integer point values using Paper API
+`EntityType` names:
 
 ```yaml
 ScoreTable:
@@ -23,10 +29,30 @@ ScoreTable:
   SILVERFISH: 0
 ```
 
-Restart the server after editing the configuration. A configured value of `0` suppresses that entity from the score table shown to players when they join. Entity type keys use the Paper API's `EntityType` names.
+Edit the file while the server is stopped, then restart it. The table is loaded
+at startup and saved to YAML when the plugin shuts down. Unknown entity names
+or malformed values are logged and skipped. A missing score-table section
+falls back to the default table. Zero-valued entries do not increase a
+player's score and are omitted from the join-time score table.
 
-MobScores has no commands of its own. It records credit for configured entity types damaged directly by a player or by a projectile fired by a player. Other mob attribution is not currently handled. Points go into ScoreKeeper's dedicated `mob-scores` bucket and are tracked by player UUID. Use `/score-bucket mob-scores` before `/score-get` to view mob points; MobScores does not change the player's active bucket automatically.
+## Scoring behavior
+
+For an entity type present in `ScoreTable`, Mob Scores records a direct player
+damager or the player shooter of a projectile. The latest qualifying player
+damager receives credit when the entity dies, provided that player is online
+then. Environmental damage does not clear recorded credit; an entity with no
+recorded player attribution awards no points. If the credited player is offline
+at death, no award is made and a warning is logged.
+
+Points are added to ScoreKeeper's `mob-scores` bucket, which Mob Scores creates
+if it does not already exist. Mob Scores does not switch the player's active
+bucket. Use ScoreKeeper's `/score-bucket mob-scores` and `/score-get` commands
+to view the score. On join, players receive the configured nonzero entity
+values. Mob Scores declares no commands or permissions of its own.
 
 ## Build
 
-Run `./gradlew test` and `./gradlew build` from the project root. See [CONTRIBUTING.md](CONTRIBUTING.md) for toolchain, local server, and helper-script details.
+Run `./gradlew spotlessCheck build` from the project root. The plugin JAR is
+written to `build/libs/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the
+first-contribution path, build/test details, and safety notes for local-server
+helpers.
