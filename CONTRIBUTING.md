@@ -70,7 +70,9 @@ From the repository root:
 
 `./gradlew build` runs the normal Gradle build and checks, including
 `spotlessCheck`. The plugin JAR is written to `build/libs/`. The wrapper is
-Gradle 9.8.0; CI runs on Ubuntu with JDK 25, runs `test`, then builds with
+Gradle 9.8.0; CI in `.github/workflows/gradle.yml` runs on pushes and pull
+requests to `main` and `develop`, and any `v*` tags. Manual releases are
+handled via `.github/workflows/release.yml`. CI runs `test`, then builds with
 `tools/build-plugin.sh`.
 
 There are currently no Java test sources and no `integrationTest` task.
