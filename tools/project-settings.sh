@@ -5,4 +5,4 @@
 PROJECT_DISPLAY_NAME="MobScores"
 
 # Modrinth project ID or slug used when MODRINTH_PROJECT_ID is not set in the environment or .env.
-MODRINTH_DEFAULT_PROJECT_ID="mob-scores"
+MODRINTH_DEFAULT_PROJECT_ID="DyMENrR5"
